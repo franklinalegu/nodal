@@ -1,0 +1,98 @@
+// Prisma schema — 100% LOCAL, SQLite. Not required until you outgrow localStorage.
+// To enable:
+//   npm install prisma @prisma/client
+//   npx prisma generate
+//   npx prisma migrate dev --name init
+// Tauri will use same schema via @tauri-apps/plugin-sql with `sqlite:canvas.db`.
+//
+// For now, src/lib/storage/index.ts uses localStorage. When isTauri() true,
+// src/lib/storage/tauriStorage.ts will read/write this DB.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./canvas.db"
+}
+
+model Project {
+  id                String       @id @default(cuid())
+  name              String
+  client            String?
+  description       String?
+  status            String       @default("active") // draft|active|archived
+  brandId           String?
+  brand             Brand?       @relation(fields: [brandId], references: [id])
+  nodes             Json         // Node[]
+  edges             Json         // Edge[]
+  generationHistory Json         @default("[]")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  assets            Asset[]
+  generations       Generation[]
+  workflows         Workflow[]
+}
+
+model Brand {
+  id          String    @id @default(cuid())
+  name        String
+  industry    String?
+  positioning String?
+  personality Json?     // string[]
+  tone        String?
+  colors      Json      // {name,hex,role}[]
+  typography  Json      // {primary,secondary,...}
+  principles  Json?     // string[]
+  restrictions Json?
+  projects    Project[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Asset {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String
+  type      String   // image|logo|font|doc|video|export
+  path      String   // file path or dataURL (dataURL only for small assets)
+  preview   String?
+  metadata  Json?
+  tags      Json?    // string[]
+  createdAt DateTime @default(now())
+}
+
+model Generation {
+  id        String   @id @default(cuid())
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  nodeId    String
+  provider  String
+  model     String?
+  prompt    String
+  params    Json?
+  output    String?
+  status    String   @default("success")
+  createdAt DateTime @default(now())
+}
+
+model Workflow {
+  id        String   @id @default(cuid())
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  name      String
+  graph     Json     // {nodes, edges}
+  createdAt DateTime @default(now())
+}
+
+model Prompt {
+  id        String   @id @default(cuid())
+  title     String
+  category  String   // branding|copy|strategy|critique|...
+  body      String
+  favorite  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
