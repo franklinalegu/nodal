@@ -29,14 +29,19 @@ body {
 .react-flow__aria-live,
 .react-flow__sr-only,
 .react-flow__edge-text,
-[aria-live="polite"] {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
+div[aria-live="polite"],
+div[aria-live="assertive"],
+.react-flow__viewport + div,
+.react-flow__viewport ~ div[aria-live] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
   overflow: hidden !important;
   clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  pointer-events: none !important;
 }

@@ -40,6 +40,20 @@ export function CreativeCanvas(){
     useCanvasStore.getState().addNode(type as never, pos);
   }, [screenToFlowPosition]);
 
+  // Defensive: hide any ReactFlow a11y live region that leaks as visible text
+  useEffect(()=>{
+    const hide = ()=>{
+      document.querySelectorAll('[aria-live="polite"],[aria-live="assertive"],.react-flow__aria-live').forEach(el=>{
+        (el as HTMLElement).style.display = 'none';
+        (el as HTMLElement).style.visibility = 'hidden';
+      });
+    };
+    hide();
+    const obs = new MutationObserver(hide);
+    obs.observe(document.body, { childList:true, subtree:true });
+    return ()=> obs.disconnect();
+  }, []);
+
   return (
     <div ref={ref} className="flex-1 relative bg-[#08080a]" onDrop={onDrop} onDragOver={e=>{e.preventDefault(); e.dataTransfer.dropEffect="move";}}>
       <ReactFlow
