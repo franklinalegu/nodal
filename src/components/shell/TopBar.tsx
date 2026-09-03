@@ -36,16 +36,22 @@ export function TopBar({ onCommand }: { onCommand:()=>void }){
         <div className="relative">
           <Button variant="sub" size="sm" onClick={()=>setExportOpen(v=>!v)}><Download size={14} className="mr-1"/> Export ▾</Button>
           {exportOpen && (
-            <div className="absolute right-0 top-9 w-64 bg-[#141417] border border-zinc-800 rounded-lg shadow-2xl overflow-hidden z-50">
+            <div className="absolute right-0 top-9 w-72 bg-[#141417] border border-zinc-800 rounded-lg shadow-2xl overflow-hidden z-50">
               <button onClick={()=>{ setExportOpen(false); exportProject(); }} className="w-full text-left px-3 py-2.5 hover:bg-zinc-900 border-b border-zinc-800">
-                <div className="text-sm font-medium text-zinc-100">Export ZIP — Full structure</div>
-                <div className="text-[11px] text-zinc-500">project.json / brand / assets / workflows / exports</div>
+                <div className="text-sm font-medium text-zinc-100">ZIP — Full structure</div>
+                <div className="text-[11px] text-zinc-500">project.json / brand / assets / workflows / exports + history</div>
               </button>
-              <button onClick={()=>{ setExportOpen(false); exportProjectJson(); }} className="w-full text-left px-3 py-2.5 hover:bg-zinc-900">
-                <div className="text-sm font-medium text-zinc-100">Export JSON — Single file</div>
+              <button onClick={()=>{ setExportOpen(false); exportProjectJson(); }} className="w-full text-left px-3 py-2.5 hover:bg-zinc-900 border-b border-zinc-800">
+                <div className="text-sm font-medium text-zinc-100">JSON — Single file</div>
                 <div className="text-[11px] text-zinc-500">projectname.json for re-import</div>
               </button>
-              <div className="px-3 py-2 bg-zinc-900/50 text-[11px] text-zinc-500">PNG / PDF per node coming via Tauri</div>
+              <div className="grid grid-cols-2 gap-0 border-b border-zinc-800">
+                <button onClick={()=>{ setExportOpen(false); (useCanvasStore.getState() as unknown as { exportPng:()=>void }).exportPng(); }} className="text-left px-3 py-2.5 hover:bg-zinc-900 border-r border-zinc-800"><div className="text-sm font-medium text-zinc-100">PNG</div><div className="text-[11px] text-zinc-500">Canvas @2x</div></button>
+                <button onClick={()=>{ setExportOpen(false); (useCanvasStore.getState() as unknown as { exportJpg:()=>void }).exportJpg(); }} className="text-left px-3 py-2.5 hover:bg-zinc-900"><div className="text-sm font-medium text-zinc-100">JPG</div><div className="text-[11px] text-zinc-500">Canvas JPG</div></button>
+                <button onClick={()=>{ setExportOpen(false); (useCanvasStore.getState() as unknown as { exportSvg:()=>void }).exportSvg(); }} className="text-left px-3 py-2.5 hover:bg-zinc-900 border-r border-zinc-800 border-t border-zinc-800"><div className="text-sm font-medium text-zinc-100">SVG</div><div className="text-[11px] text-zinc-500">Vector placeholder</div></button>
+                <button onClick={()=>{ setExportOpen(false); (useCanvasStore.getState() as unknown as { exportPdf:()=>void }).exportPdf(); }} className="text-left px-3 py-2.5 hover:bg-zinc-900 border-t border-zinc-800"><div className="text-sm font-medium text-zinc-100">PDF</div><div className="text-[11px] text-zinc-500">Canvas PDF</div></button>
+              </div>
+              <div className="px-3 py-2 bg-zinc-900/50 text-[11px] text-zinc-500">Web: html2canvas. Tauri: native screenshot coming</div>
             </div>
           )}
         </div>

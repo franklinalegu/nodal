@@ -34,6 +34,10 @@ interface CanvasState {
   load: ()=>Promise<void>;
   exportProject: ()=>Promise<void>;
   exportProjectJson: ()=>Promise<void>;
+  exportPng: ()=>Promise<void>;
+  exportJpg: ()=>Promise<void>;
+  exportSvg: ()=>Promise<void>;
+  exportPdf: ()=>Promise<void>;
   setProjectName: (n:string)=>void;
   setZoom: (z:number)=>void;
   pushHistory: ()=>void;
@@ -230,6 +234,22 @@ export const useCanvasStore = create<CanvasState>((set, get)=>({
     const { storage } = await import("@/lib/storage");
     const fileName = `${projectName.replace(/\W+/g,"_").toLowerCase()}.json`;
     await storage.exportBackup(payload as never, fileName);
+  },
+  exportPng: async ()=>{
+    const { exportCanvasPng } = await import("@/lib/export");
+    await exportCanvasPng();
+  },
+  exportJpg: async ()=>{
+    const { exportCanvasJpg } = await import("@/lib/export");
+    await exportCanvasJpg();
+  },
+  exportSvg: async ()=>{
+    const { exportCanvasSvg } = await import("@/lib/export");
+    await exportCanvasSvg();
+  },
+  exportPdf: async ()=>{
+    const { exportCanvasPdf } = await import("@/lib/export");
+    await exportCanvasPdf();
   },
   addGeneration: (g)=>{
     const rec = { id: nid("gen"), ...g, createdAt: new Date().toISOString() };

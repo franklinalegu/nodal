@@ -232,11 +232,16 @@ function NodeForm({ node, onChange, onAI, aiLoading, aiError }: any){
   if (type==="export") return (
     <div className="space-y-3 text-sm text-zinc-400">
       <div>Formats: {d.formats?.join(", ")}</div>
-      <div className="flex gap-2">
-        <Button variant="sub" size="sm" onClick={async()=>{ const { useCanvasStore } = await import("@/store/useCanvasStore"); useCanvasStore.getState().exportProject(); }}>Export ZIP</Button>
-        <Button variant="ghost" size="sm" onClick={async()=>{ const { useCanvasStore } = await import("@/store/useCanvasStore"); (useCanvasStore.getState() as unknown as { exportProjectJson:()=>void }).exportProjectJson(); }}>JSON only</Button>
+      <div className="grid grid-cols-2 gap-1">
+        <Button variant="sub" size="sm" onClick={async()=>{ const { useCanvasStore } = await import("@/store/useCanvasStore"); useCanvasStore.getState().exportProject(); }}>ZIP</Button>
+        <Button variant="sub" size="sm" onClick={async()=>{ const { useCanvasStore } = await import("@/store/useCanvasStore"); (useCanvasStore.getState() as unknown as { exportProjectJson:()=>void }).exportProjectJson(); }}>JSON</Button>
+        <Button variant="sub" size="sm" onClick={async()=>{ const { useCanvasStore } = await import("@/store/useCanvasStore"); (useCanvasStore.getState() as unknown as { exportPng:()=>void }).exportPng(); }}>PNG</Button>
+        <Button variant="sub" size="sm" onClick={async()=>{ const { useCanvasStore } = await import("@/store/useCanvasStore"); (useCanvasStore.getState() as unknown as { exportJpg:()=>void }).exportJpg(); }}>JPG</Button>
+        <Button variant="sub" size="sm" onClick={async()=>{ const { useCanvasStore } = await import("@/store/useCanvasStore"); (useCanvasStore.getState() as unknown as { exportSvg:()=>void }).exportSvg(); }}>SVG</Button>
+        <Button variant="sub" size="sm" onClick={async()=>{ const { useCanvasStore } = await import("@/store/useCanvasStore"); (useCanvasStore.getState() as unknown as { exportPdf:()=>void }).exportPdf(); }}>PDF</Button>
       </div>
-      <div className="text-xs leading-relaxed">ZIP creates:<br/>`project.json` `brand/brand.json` `assets/assets.json` `workflows/workflows.json` `exports/README` `generation_history.json`</div>
+      <div className="text-xs leading-relaxed">ZIP:<br/>`project.json` `brand/` `assets/` `workflows/` `exports/` `history`</div>
+      <div className="text-xs text-zinc-500">PNG/JPG/PDF capture the current canvas viewport @2x via html2canvas.</div>
     </div>
   );
   if (type==="aiAssistant") return (
