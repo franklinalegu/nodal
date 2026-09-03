@@ -24,3 +24,19 @@ body {
 .react-flow__edge.selected .react-flow__edge-path { stroke: #fff !important; }
 .react-flow__handle { width: 10px !important; height: 10px !important; background: #6366f1 !important; border: 2px solid #0a0a0c !important; }
 .react-flow__node { padding: 0 !important; border: none !important; background: transparent !important; }
+
+/* Hide React Flow a11y live region — was leaking as visible text "Press enter or space..." */
+.react-flow__aria-live,
+.react-flow__sr-only,
+.react-flow__edge-text,
+[aria-live="polite"] {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
