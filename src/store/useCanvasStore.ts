@@ -33,6 +33,7 @@ interface CanvasState {
   save: ()=>Promise<void>;
   load: ()=>Promise<void>;
   exportProject: ()=>Promise<void>;
+  exportProjectJson: ()=>Promise<void>;
   setProjectName: (n:string)=>void;
   setZoom: (z:number)=>void;
   pushHistory: ()=>void;
@@ -218,6 +219,12 @@ export const useCanvasStore = create<CanvasState>((set, get)=>({
     } catch {}
   },
   exportProject: async ()=>{
+    const { nodes, edges, projectName, generationHistory } = get();
+    const payload = { projectName, nodes, edges, generationHistory, exportedAt: new Date().toISOString(), v: 1 };
+    const { exportProjectZip } = await import("@/lib/export");
+    await exportProjectZip(payload as never);
+  },
+  exportProjectJson: async ()=>{
     const { nodes, edges, projectName, generationHistory } = get();
     const payload = { projectName, nodes, edges, generationHistory, exportedAt: new Date().toISOString(), v: 1 };
     const { storage } = await import("@/lib/storage");

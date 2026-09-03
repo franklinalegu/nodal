@@ -232,7 +232,11 @@ function NodeForm({ node, onChange, onAI, aiLoading, aiError }: any){
   if (type==="export") return (
     <div className="space-y-3 text-sm text-zinc-400">
       <div>Formats: {d.formats?.join(", ")}</div>
-      <div className="text-xs">Use Top Bar → Export to download project JSON. Add PNG/PDF export per node via properties.</div>
+      <div className="flex gap-2">
+        <Button variant="sub" size="sm" onClick={async()=>{ const { useCanvasStore } = await import("@/store/useCanvasStore"); useCanvasStore.getState().exportProject(); }}>Export ZIP</Button>
+        <Button variant="ghost" size="sm" onClick={async()=>{ const { useCanvasStore } = await import("@/store/useCanvasStore"); (useCanvasStore.getState() as unknown as { exportProjectJson:()=>void }).exportProjectJson(); }}>JSON only</Button>
+      </div>
+      <div className="text-xs leading-relaxed">ZIP creates:<br/>`project.json` `brand/brand.json` `assets/assets.json` `workflows/workflows.json` `exports/README` `generation_history.json`</div>
     </div>
   );
   if (type==="aiAssistant") return (
